@@ -17,6 +17,8 @@ namespace YellowCat.TweenPlugin.Editor
             ("Rotate", typeof(RotateTweenConfig)),
             ("Fade", typeof(FadeTweenConfig)),
             ("Sequence", typeof(SequenceTweenConfig)),
+            ("Preset/Popup Intro", typeof(TweenPreset_PopupIntro)),
+            ("Preset/Popup Outro", typeof(TweenPreset_PopupOutro)),
         };
 
         // Package root is found from this script's location, so the package
@@ -92,7 +94,7 @@ namespace YellowCat.TweenPlugin.Editor
             EnsureFolder(NewFolder);
 
             string path = AssetDatabase.GenerateUniqueAssetPath(
-                $"{NewFolder}/{baseName}_{source.GetType().Name.Replace("TweenConfig", "")}.asset");
+                $"{NewFolder}/{baseName}_{Prefix(source.GetType())}.asset");
 
             var copy = (TweenConfigBase)UnityEngine.Object.Instantiate(source);
             copy.name = Path.GetFileNameWithoutExtension(path);
@@ -110,7 +112,7 @@ namespace YellowCat.TweenPlugin.Editor
         }
 
         private static string Prefix(Type type) =>
-            type.Name.Replace("TweenConfig", "");
+            type.Name.Replace("TweenConfig", "").Replace("TweenPreset_", "");
 
         public static void EnsureFolder(string folder)
         {

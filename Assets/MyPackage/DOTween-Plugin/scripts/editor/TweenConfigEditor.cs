@@ -86,7 +86,9 @@ namespace YellowCat.TweenPlugin.Editor
         {
             serializedObject.Update();
 
-            bool isSequence = config is SequenceTweenConfig;
+            bool isSequence = config is SequenceTweenConfig
+                || config is TweenConfigPreset;
+            bool isPreset = config is TweenConfigPreset;
             SerializedProperty useCurve =
                 serializedObject.FindProperty("useCurve");
             SerializedProperty prop = serializedObject.GetIterator();
@@ -125,6 +127,12 @@ namespace YellowCat.TweenPlugin.Editor
                             EditorGUILayout.FloatField(
                                 "Total Duration", config.TotalDuration);
                     }
+                }
+                else if (isPreset && (prop.propertyPath == "ease"
+                    || prop.propertyPath == "useCurve"
+                    || prop.propertyPath == "curve"))
+                {
+                    // Presets choose their own eases.
                 }
                 else if (prop.propertyPath == "ease")
                 {

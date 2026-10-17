@@ -441,7 +441,7 @@ MonoBehaviour:
   config: {fileID: 11400000, guid: 6d97d9de7660ef642bddb4e57a47a14e, type: 2}
   target: {fileID: 860493625}
   liveReload: 1
-  defaultState: {fileID: 11400000, guid: 8c3afb39b5a003a4c902ec15296a958b, type: 2}
+  defaultState: {fileID: 11400000, guid: c2cc404280916eb499c22366041abba2, type: 2}
   states: []
 --- !u!1 &971494119
 GameObject:
@@ -1009,11 +1009,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1326433422}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ff77dc28864ea24da6cebde5792975c, type: 3}
+  m_Script: {fileID: 11500000, guid: 7a11eb5041b8ecd46bfaf205543556be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animationPlayers:
-  - {fileID: 860493629}
   buttonOpenPopup: {fileID: 1355628260}
   popupCtrl: {fileID: 991255627}
 --- !u!1 &1355628258

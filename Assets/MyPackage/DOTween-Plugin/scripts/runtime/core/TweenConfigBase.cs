@@ -117,7 +117,7 @@ namespace YellowCat.TweenPlugin
                 .SetAutoKill(false);
         }
 
-        private void ApplyEase(Tween tween)
+        protected virtual void ApplyEase(Tween tween)
         {
             if (useCurve && curve != null && curve.length > 0)
                 tween.SetEase(curve);

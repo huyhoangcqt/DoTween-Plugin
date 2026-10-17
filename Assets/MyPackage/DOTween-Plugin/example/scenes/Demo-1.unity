@@ -440,6 +440,8 @@ MonoBehaviour:
   config: {fileID: 11400000, guid: 94d0b2182d068cb4da20e1ab8dceb4a4, type: 2}
   target: {fileID: 860493625}
   liveReload: 1
+  defaultState: {fileID: 0}
+  states: []
 --- !u!1 &971494119
 GameObject:
   m_ObjectHideFlags: 0
@@ -921,6 +923,8 @@ MonoBehaviour:
   config: {fileID: 11400000, guid: 974b9da22bbd80243b1a6845f12435e9, type: 2}
   target: {fileID: 1284522334}
   liveReload: 1
+  defaultState: {fileID: 0}
+  states: []
 --- !u!1 &1326433422
 GameObject:
   m_ObjectHideFlags: 0
@@ -1263,6 +1267,8 @@ MonoBehaviour:
   config: {fileID: 11400000, guid: e8a212c45a312ec48944b15343c10fa3, type: 2}
   target: {fileID: 1398072907}
   liveReload: 1
+  defaultState: {fileID: 0}
+  states: []
 --- !u!1 &1773817358
 GameObject:
   m_ObjectHideFlags: 0
@@ -1353,9 +1359,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d73bae90b781d6d428eeaf9c30586bed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  config: {fileID: 11400000, guid: 8a2c0df5d6ad4734f87900c86f2eee41, type: 2}
+  config: {fileID: 11400000, guid: 5264f7baf1337a44290511310d4ac39e, type: 2}
   target: {fileID: 1773817359}
   liveReload: 1
+  defaultState: {fileID: 0}
+  states: []
 --- !u!225 &1773817364
 CanvasGroup:
   m_ObjectHideFlags: 0

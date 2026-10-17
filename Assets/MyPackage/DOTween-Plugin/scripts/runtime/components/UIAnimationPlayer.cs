@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace YellowCat.TweenPlugin
@@ -24,6 +25,23 @@ namespace YellowCat.TweenPlugin
 
         [SerializeField]
         private bool liveReload = true;
+
+        [Header("Recorded States")]
+        [SerializeField]
+        private TweenObjectState defaultState;
+
+        [SerializeField]
+        private List<TweenObjectState> states = new List<TweenObjectState>();
+
+        public TweenObjectState DefaultState
+        {
+            get => defaultState;
+            set => defaultState = value;
+        }
+
+        public List<TweenObjectState> States => states;
+
+        public Transform TargetTransform => ResolveTarget();
 
         private TweenConfigBase playedConfig;
 

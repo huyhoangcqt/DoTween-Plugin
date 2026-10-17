@@ -112,7 +112,7 @@ namespace YellowCat.TweenPlugin.Editor
         private static string Prefix(Type type) =>
             type.Name.Replace("TweenConfig", "");
 
-        private static void EnsureFolder(string folder)
+        public static void EnsureFolder(string folder)
         {
             if (AssetDatabase.IsValidFolder(folder))
                 return;

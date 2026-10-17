@@ -15,6 +15,12 @@ namespace YellowCat.TweenPlugin
         [SerializeField]
         private Ease ease = Ease.OutCubic;
 
+        [SerializeField]
+        private bool useCurve;
+
+        [SerializeField]
+        private AnimationCurve curve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
+
         [Header("Loop")]
         [SerializeField, Min(-1)]
         private int loops = 1;
@@ -75,11 +81,25 @@ namespace YellowCat.TweenPlugin
             // with a trailing wait and the wrapper is what gets looped.
             if (HoldInterval > 0f)
             {
-                tween.SetEase(ease);
+                ApplyEase(tween);
 
-                tween = DOTween.Sequence()
-                    .Append(tween)
-                    .AppendInterval(HoldInterval);
+                // Yoyo plays the wrapper backwards, so a trailing-only wait would
+                // be skipped on every backward->forward turn. Split it in half
+                // on both sides so each turn gets the full interval.
+                Sequence wrapper = DOTween.Sequence();
+
+                if (loopType == LoopType.Yoyo)
+                {
+                    wrapper.AppendInterval(HoldInterval * 0.5f)
+                        .Append(tween)
+                        .AppendInterval(HoldInterval * 0.5f);
+                }
+                else
+                {
+                    wrapper.Append(tween).AppendInterval(HoldInterval);
+                }
+
+                tween = wrapper;
 
                 return tween
                     .SetDelay(delay)
@@ -88,12 +108,21 @@ namespace YellowCat.TweenPlugin
                     .SetAutoKill(false);
             }
 
+            ApplyEase(tween);
+
             return tween
                 .SetDelay(delay)
-                .SetEase(ease)
                 .SetLoops(loops, loopType)
                 .SetUpdate(UpdateType.Normal, ignoreTimeScale)
                 .SetAutoKill(false);
+        }
+
+        private void ApplyEase(Tween tween)
+        {
+            if (useCurve && curve != null && curve.length > 0)
+                tween.SetEase(curve);
+            else
+                tween.SetEase(ease);
         }
 
         protected abstract Tween CreateTween(Component target);

@@ -87,6 +87,8 @@ namespace YellowCat.TweenPlugin.Editor
             serializedObject.Update();
 
             bool isSequence = config is SequenceTweenConfig;
+            SerializedProperty useCurve =
+                serializedObject.FindProperty("useCurve");
             SerializedProperty prop = serializedObject.GetIterator();
             bool enterChildren = true;
 
@@ -123,6 +125,16 @@ namespace YellowCat.TweenPlugin.Editor
                             EditorGUILayout.FloatField(
                                 "Total Duration", config.TotalDuration);
                     }
+                }
+                else if (prop.propertyPath == "ease")
+                {
+                    using (new EditorGUI.DisabledScope(useCurve.boolValue))
+                        EditorGUILayout.PropertyField(prop, true);
+                }
+                else if (prop.propertyPath == "curve")
+                {
+                    if (useCurve.boolValue)
+                        EditorGUILayout.PropertyField(prop, true);
                 }
                 else
                 {

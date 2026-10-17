@@ -19,6 +19,10 @@ namespace YellowCat.TweenPlugin
         [SerializeField, Min(-1)]
         private int loops = 1;
 
+        [SerializeField, Min(0f)]
+        [Tooltip("Wait time between loops, in seconds.")]
+        private float loopInterval;
+
         [SerializeField]
         private LoopType loopType = LoopType.Restart;
 
@@ -26,7 +30,15 @@ namespace YellowCat.TweenPlugin
         [SerializeField]
         private bool ignoreTimeScale;
 
-        public float Duration => duration;
+        public virtual float Duration => duration;
+        public int Loops => loops;
+        public float LoopInterval => loopInterval;
+
+        // (Duration + LoopInterval) per loop; infinity when loops is -1.
+        public float TotalDuration =>
+            loops < 0 ? float.PositiveInfinity : (Duration + HoldInterval) * loops;
+
+        private float HoldInterval => loops == 1 ? 0f : loopInterval;
         public float Delay => delay;
         public Ease Ease => ease;
 
@@ -58,6 +70,23 @@ namespace YellowCat.TweenPlugin
 
             if (tween == null)
                 return null;
+
+            // DOTween has no loop interval, so one loop is wrapped together
+            // with a trailing wait and the wrapper is what gets looped.
+            if (HoldInterval > 0f)
+            {
+                tween.SetEase(ease);
+
+                tween = DOTween.Sequence()
+                    .Append(tween)
+                    .AppendInterval(HoldInterval);
+
+                return tween
+                    .SetDelay(delay)
+                    .SetLoops(loops, loopType)
+                    .SetUpdate(UpdateType.Normal, ignoreTimeScale)
+                    .SetAutoKill(false);
+            }
 
             return tween
                 .SetDelay(delay)

@@ -16,6 +16,7 @@ MonoBehaviour:
   delay: 0
   ease: 9
   loops: 10
+  loopInterval: 0
   loopType: 0
   ignoreTimeScale: 0
   endPosition: {x: 1, y: 1}

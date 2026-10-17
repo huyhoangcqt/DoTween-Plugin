@@ -41,12 +41,12 @@ namespace YellowCat.TweenPlugin.Editor
         public override void OnInspectorGUI()
         {
             EditorGUI.BeginChangeCheck();
-            DrawDefaultInspector();
+
+            DrawProperties((TweenConfigBase)target);
 
             if (EditorGUI.EndChangeCheck())
             {
                 // Values are applied now; OnValidate raises the live-reload event.
-                serializedObject.ApplyModifiedProperties();
                 EditorUtility.SetDirty(target);
             }
 
@@ -78,6 +78,59 @@ namespace YellowCat.TweenPlugin.Editor
                 if (GUILayout.Button("Save"))
                     Save(config);
             }
+        }
+
+        // Sequence duration is computed from its steps, so it is read-only.
+        // Total Duration is shown right below Duration.
+        private void DrawProperties(TweenConfigBase config)
+        {
+            serializedObject.Update();
+
+            bool isSequence = config is SequenceTweenConfig;
+            SerializedProperty prop = serializedObject.GetIterator();
+            bool enterChildren = true;
+
+            while (prop.NextVisible(enterChildren))
+            {
+                enterChildren = false;
+
+                if (prop.propertyPath == "m_Script")
+                {
+                    using (new EditorGUI.DisabledScope(true))
+                        EditorGUILayout.PropertyField(prop);
+                }
+                else if (prop.propertyPath == "duration")
+                {
+                    if (isSequence)
+                    {
+                        using (new EditorGUI.DisabledScope(true))
+                        {
+                            EditorGUILayout.FloatField(
+                                "Duration (auto)", config.Duration);
+                        }
+                    }
+                    else
+                    {
+                        EditorGUILayout.PropertyField(prop, true);
+                    }
+
+                    using (new EditorGUI.DisabledScope(true))
+                    {
+                        if (config.Loops < 0)
+                            EditorGUILayout.TextField(
+                                "Total Duration", "Infinite");
+                        else
+                            EditorGUILayout.FloatField(
+                                "Total Duration", config.TotalDuration);
+                    }
+                }
+                else
+                {
+                    EditorGUILayout.PropertyField(prop, true);
+                }
+            }
+
+            serializedObject.ApplyModifiedProperties();
         }
 
         private static void Save(TweenConfigBase config)

@@ -32,6 +32,54 @@ namespace YellowCat.TweenPlugin
 
         public IReadOnlyList<Step> Steps => steps;
 
+        private static int durationDepth;
+
+        // Sum of Append steps (interval + duration); a Join step extends the
+        // current group only if it is longer than the group so far.
+        public override float Duration
+        {
+            get
+            {
+                if (durationDepth > 16)
+                    return 0f;
+
+                durationDepth++;
+
+                try
+                {
+                    float cursor = 0f;
+                    float groupStart = 0f;
+                    float end = 0f;
+
+                    foreach (Step step in steps)
+                    {
+                        if (step == null || step.config == null)
+                            continue;
+
+                        float d = step.config.Duration;
+
+                        if (step.mode == JoinMode.Join)
+                        {
+                            end = Mathf.Max(end, groupStart + d);
+                        }
+                        else
+                        {
+                            groupStart = end + step.interval;
+                            end = groupStart + d;
+                        }
+
+                        cursor = end;
+                    }
+
+                    return cursor;
+                }
+                finally
+                {
+                    durationDepth--;
+                }
+            }
+        }
+
         public override bool Uses(TweenConfigBase other)
         {
             return Uses(other, 0);

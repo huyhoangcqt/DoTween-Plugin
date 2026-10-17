@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using UnityEngine;
 using YellowCat.TweenPlugin;
 
-public partial class Scene_Demo1
+public partial class UIInteraction
 {
     [SerializeField] private List<UIAnimationPlayer> animationPlayers;
 

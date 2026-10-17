@@ -50,7 +50,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   loops: 10
-  loopInterval: 0
+  loopInterval: 0.2
   loopType: 1
   ignoreTimeScale: 0
   endAlpha: 0

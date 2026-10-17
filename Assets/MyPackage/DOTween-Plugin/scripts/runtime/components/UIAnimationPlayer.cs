@@ -86,6 +86,8 @@ namespace YellowCat.TweenPlugin
 
             if (initialCanvasGroup != null)
                 initialCanvasGroup.alpha = initialAlpha;
+            else if (initialTransform.TryGetComponent(out CanvasGroup added))
+                added.alpha = 1f; // CanvasGroup was added by a fade tween.
         }
 
         private void OnEnable()

@@ -18,12 +18,7 @@ namespace YellowCat.TweenPlugin
                 target.GetComponent<CanvasGroup>();
 
             if (canvasGroup == null)
-            {
-                Debug.LogWarning(
-                    $"{name}: Target requires a CanvasGroup.", this);
-
-                return null;
-            }
+                canvasGroup = target.gameObject.AddComponent<CanvasGroup>();
 
             return canvasGroup.DOFade(endAlpha, Duration);
         }

@@ -1275,6 +1275,7 @@ GameObject:
   - component: {fileID: 1773817362}
   - component: {fileID: 1773817361}
   - component: {fileID: 1773817363}
+  - component: {fileID: 1773817364}
   m_Layer: 5
   m_Name: Fade
   m_TagString: Untagged
@@ -1355,6 +1356,18 @@ MonoBehaviour:
   config: {fileID: 11400000, guid: 8a2c0df5d6ad4734f87900c86f2eee41, type: 2}
   target: {fileID: 1773817359}
   liveReload: 1
+--- !u!225 &1773817364
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1773817358}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1963367198
 GameObject:
   m_ObjectHideFlags: 0

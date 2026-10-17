@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5560caf5cd763b243b89af6aa9abcc7d, type: 3}
   m_Name: TweenObj_State_3_Scale
   m_EditorClassIdentifier: 
-  duration: 0.25
+  duration: 0.5
   delay: 0
   ease: 9
   useCurve: 0

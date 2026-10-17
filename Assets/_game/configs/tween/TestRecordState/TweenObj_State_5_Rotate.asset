@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93365ac30c2944e43885129980f6b58a, type: 3}
   m_Name: TweenObj_State_5_Rotate
   m_EditorClassIdentifier: 
-  duration: 0.25
+  duration: 0.5
   delay: 0
   ease: 9
   useCurve: 0

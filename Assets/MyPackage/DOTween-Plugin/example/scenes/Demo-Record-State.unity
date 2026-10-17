@@ -801,9 +801,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animationPlayers:
   - {fileID: 860493629}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   buttonPlay: {fileID: 1355628260}
 --- !u!1 &1355628258
 GameObject:

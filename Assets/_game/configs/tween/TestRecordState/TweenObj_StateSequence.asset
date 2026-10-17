@@ -47,22 +47,22 @@ MonoBehaviour:
   steps:
   - config: {fileID: 11400000, guid: d80208f784dfe7d42a815c663e6af993, type: 2}
     mode: 0
-    interval: 0
+    interval: 0.25
   - config: {fileID: 11400000, guid: c2234648349349042801eae6d14f6896, type: 2}
     mode: 0
-    interval: 0
+    interval: 0.25
   - config: {fileID: 11400000, guid: 23ad73ba3a6acbe4b80a1b7716cf2e18, type: 2}
     mode: 0
-    interval: 0
+    interval: 0.25
   - config: {fileID: 11400000, guid: e95fd60c4ebfed3418e0bd3cd90f72f5, type: 2}
     mode: 0
-    interval: 0
+    interval: 0.25
   - config: {fileID: 11400000, guid: bd42f6d97d25b2445807eded64888210, type: 2}
     mode: 1
     interval: 0
   - config: {fileID: 11400000, guid: b430e88b1fd52d240976a842db5ea94d, type: 2}
     mode: 0
-    interval: 0
+    interval: 0.25
   - config: {fileID: 11400000, guid: cce7a1330a4cef54581b3866482f75f1, type: 2}
     mode: 0
-    interval: 0
+    interval: 0.25

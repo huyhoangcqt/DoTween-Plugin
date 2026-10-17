@@ -22,13 +22,40 @@ namespace YellowCat.TweenPlugin
             set => target = value;
         }
 
+        [SerializeField]
+        private bool liveReload = true;
+
+        private TweenConfigBase playedConfig;
+
+        private void OnEnable()
+        {
+            TweenConfigBase.AnyChanged += OnAnyConfigChanged;
+        }
+
+        private void OnDisable()
+        {
+            TweenConfigBase.AnyChanged -= OnAnyConfigChanged;
+        }
+
+        // Rebuilds the running tween so edits to the config apply immediately.
+        private void OnAnyConfigChanged(TweenConfigBase changed)
+        {
+            if (!liveReload || playedConfig == null || changed == null)
+                return;
+
+            if (!playedConfig.Uses(changed))
+                return;
+
+            DOTweenExecutor.Play(
+                playedConfig,
+                target != null ? target : transform,
+                this,
+                true);
+        }
+
         public void Play()
         {
-            Debug.Log("Play");
-            DOTweenExecutor.Play(
-                config,
-                target != null ? target : transform,
-                this);
+            PlayInternal(config);
         }
 
         public void Play(TweenConfigBase overrideConfig)
@@ -36,14 +63,23 @@ namespace YellowCat.TweenPlugin
             if (overrideConfig == null)
                 return;
 
-            DOTweenExecutor.Play(
-                overrideConfig,
+            PlayInternal(overrideConfig);
+        }
+
+        private void PlayInternal(TweenConfigBase toPlay)
+        {
+            if (DOTweenExecutor.Play(
+                toPlay,
                 target != null ? target : transform,
-                this);
+                this))
+            {
+                playedConfig = toPlay;
+            }
         }
 
         public void Stop()
         {
+            playedConfig = null;
             DOTweenExecutor.Stop(this);
         }
 

@@ -30,6 +30,20 @@ namespace YellowCat.TweenPlugin
         public float Delay => delay;
         public Ease Ease => ease;
 
+        /// <summary>Raised whenever any config is modified (inspector edit or NotifyChanged).</summary>
+        public static event System.Action<TweenConfigBase> AnyChanged;
+
+        public void NotifyChanged() => AnyChanged?.Invoke(this);
+
+        protected virtual void OnValidate()
+        {
+            if (Application.isPlaying)
+                NotifyChanged();
+        }
+
+        /// <summary>True if this config is, or contains, the given config.</summary>
+        public virtual bool Uses(TweenConfigBase other) => other == this;
+
         public Tween BuildTween(Component target)
         {
             if (target == null)

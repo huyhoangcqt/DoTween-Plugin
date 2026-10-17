@@ -12,10 +12,14 @@ namespace YellowCat.TweenPlugin
         public static bool Play(
             TweenConfigBase config,
             Component target,
-            MonoBehaviour owner)
+            MonoBehaviour owner,
+            bool rewindPrevious = false)
         {
             if (config == null || target == null || owner == null)
                 return false;
+
+            if (rewindPrevious && TryGetTween(owner, out Tween previous))
+                previous.Rewind();
 
             Stop(owner);
 

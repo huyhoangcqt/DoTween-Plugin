@@ -22,9 +22,9 @@ MonoBehaviour:
   - config: {fileID: 11400000, guid: 974b9da22bbd80243b1a6845f12435e9, type: 2}
     mode: 0
     interval: 1
-  - config: {fileID: 11400000, guid: e8a212c45a312ec48944b15343c10fa3, type: 2}
-    mode: 0
-    interval: 1
   - config: {fileID: 11400000, guid: 41467b74cc8bb42459cff43db0d7f38a, type: 2}
     mode: 0
+    interval: 1
+  - config: {fileID: 11400000, guid: e8a212c45a312ec48944b15343c10fa3, type: 2}
+    mode: 1
     interval: 1

@@ -26,5 +26,5 @@ MonoBehaviour:
     mode: 0
     interval: 1
   - config: {fileID: 11400000, guid: e8a212c45a312ec48944b15343c10fa3, type: 2}
-    mode: 1
+    mode: 0
     interval: 1

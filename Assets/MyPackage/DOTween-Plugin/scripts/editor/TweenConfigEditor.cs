@@ -62,11 +62,11 @@ namespace YellowCat.TweenPlugin.Editor
 
             using (new EditorGUILayout.HorizontalScope())
             {
+                if (GUILayout.Button("Reset GameObject State"))
+                    ResetState(config);
+
                 if (GUILayout.Button("Replay"))
                     Replay(config);
-
-                if (GUILayout.Button("Save"))
-                    Save(config);
 
                 using (new EditorGUI.DisabledScope(
                     !Snapshots.ContainsKey(config.GetInstanceID())))
@@ -74,6 +74,9 @@ namespace YellowCat.TweenPlugin.Editor
                     if (GUILayout.Button("Revert"))
                         Revert(config);
                 }
+
+                if (GUILayout.Button("Save"))
+                    Save(config);
             }
         }
 
@@ -95,15 +98,28 @@ namespace YellowCat.TweenPlugin.Editor
             config.NotifyChanged();
         }
 
-        private static void Replay(TweenConfigBase config)
+        private static void ResetState(TweenConfigBase config)
+        {
+            foreach (UIAnimationPlayer player in FindPlayers())
+            {
+                if (player.Config != null && player.Config.Uses(config))
+                    player.ResetState();
+            }
+        }
+
+        private static UIAnimationPlayer[] FindPlayers()
         {
 #if UNITY_2022_2_OR_NEWER
-            var players = Object.FindObjectsByType<UIAnimationPlayer>(
+            return Object.FindObjectsByType<UIAnimationPlayer>(
                 FindObjectsSortMode.None);
 #else
-            var players = Object.FindObjectsOfType<UIAnimationPlayer>();
+            return Object.FindObjectsOfType<UIAnimationPlayer>();
 #endif
-            foreach (UIAnimationPlayer player in players)
+        }
+
+        private static void Replay(TweenConfigBase config)
+        {
+            foreach (UIAnimationPlayer player in FindPlayers())
             {
                 if (player.Config != null && player.Config.Uses(config))
                     player.Play();

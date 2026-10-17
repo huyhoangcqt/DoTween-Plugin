@@ -27,6 +27,67 @@ namespace YellowCat.TweenPlugin
 
         private TweenConfigBase playedConfig;
 
+        private Transform initialTransform;
+        private Vector3 initialLocalPosition;
+        private Quaternion initialLocalRotation;
+        private Vector3 initialLocalScale;
+        private Vector2 initialAnchoredPosition;
+        private Vector2 initialSizeDelta;
+        private CanvasGroup initialCanvasGroup;
+        private float initialAlpha;
+
+        private void Awake()
+        {
+            CaptureInitialState();
+        }
+
+        private Transform ResolveTarget()
+        {
+            return target != null ? target : transform;
+        }
+
+        public void CaptureInitialState()
+        {
+            Transform t = ResolveTarget();
+            initialTransform = t;
+            initialLocalPosition = t.localPosition;
+            initialLocalRotation = t.localRotation;
+            initialLocalScale = t.localScale;
+
+            if (t is RectTransform rect)
+            {
+                initialAnchoredPosition = rect.anchoredPosition;
+                initialSizeDelta = rect.sizeDelta;
+            }
+
+            initialCanvasGroup = t.GetComponent<CanvasGroup>();
+
+            if (initialCanvasGroup != null)
+                initialAlpha = initialCanvasGroup.alpha;
+        }
+
+        /// <summary>Stops the tween and restores the target to its state at Awake.</summary>
+        public void ResetState()
+        {
+            Stop();
+
+            if (initialTransform == null)
+                return;
+
+            initialTransform.localPosition = initialLocalPosition;
+            initialTransform.localRotation = initialLocalRotation;
+            initialTransform.localScale = initialLocalScale;
+
+            if (initialTransform is RectTransform rect)
+            {
+                rect.anchoredPosition = initialAnchoredPosition;
+                rect.sizeDelta = initialSizeDelta;
+            }
+
+            if (initialCanvasGroup != null)
+                initialCanvasGroup.alpha = initialAlpha;
+        }
+
         private void OnEnable()
         {
             TweenConfigBase.AnyChanged += OnAnyConfigChanged;

@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef2b21fbdd594114480df5c2bbe47106, type: 3}
-  m_Name: TweenObj_StateSequence
+  m_Script: {fileID: 11500000, guid: 93365ac30c2944e43885129980f6b58a, type: 3}
+  m_Name: TweenObj_State_4_Rotate
   m_EditorClassIdentifier: 
   duration: 0.25
   delay: 0
@@ -44,10 +44,5 @@ MonoBehaviour:
   loopInterval: 0
   loopType: 0
   ignoreTimeScale: 0
-  steps:
-  - config: {fileID: 11400000, guid: cf92390450a80c04790b14f0e22f451b, type: 2}
-    mode: 0
-    interval: 0
-  - config: {fileID: 11400000, guid: 3a75abffbd041d44d8a369ee68885421, type: 2}
-    mode: 0
-    interval: 0
+  endRotation: {x: -0, y: 0, z: 180}
+  relative: 0

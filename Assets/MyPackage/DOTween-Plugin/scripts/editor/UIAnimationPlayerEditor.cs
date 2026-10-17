@@ -379,6 +379,35 @@ namespace YellowCat.TweenPlugin.Editor
 
             if (EditorGUI.EndChangeCheck())
                 TweenConfigLibrary.NewFolder = folder.TrimEnd('/');
+
+            if (!GUILayout.Button("Change Folder"))
+                return;
+
+            string start = TweenConfigLibrary.NewFolder;
+            string picked = EditorUtility.OpenFolderPanel(
+                "Select folder for new configs",
+                AssetDatabase.IsValidFolder(start) ? start : "Assets",
+                string.Empty);
+
+            if (string.IsNullOrEmpty(picked))
+                return;
+
+            picked = picked.Replace('\\', '/');
+            string projectRoot = Application.dataPath.Substring(
+                0, Application.dataPath.Length - "Assets".Length);
+
+            if (!picked.StartsWith(projectRoot, System.StringComparison.Ordinal))
+            {
+                EditorUtility.DisplayDialog(
+                    "Invalid folder",
+                    "Please choose a folder inside this Unity project.",
+                    "OK");
+                return;
+            }
+
+            TweenConfigLibrary.NewFolder =
+                picked.Substring(projectRoot.Length).TrimEnd('/');
+            GUI.FocusControl(null);
         }
     }
 }

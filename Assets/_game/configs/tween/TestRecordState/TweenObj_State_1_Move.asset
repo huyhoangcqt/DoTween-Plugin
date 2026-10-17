@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2c3fc4535e0906e4c859f88865c036a7, type: 3}
-  m_Name: TweenObj_State_2_Move
+  m_Name: TweenObj_State_1_Move
   m_EditorClassIdentifier: 
-  duration: 0.5
+  duration: 0.25
   delay: 0
   ease: 9
   useCurve: 0
@@ -44,5 +44,5 @@ MonoBehaviour:
   loopInterval: 0
   loopType: 0
   ignoreTimeScale: 0
-  endPosition: {x: 580, y: -50}
+  endPosition: {x: 53, y: -50}
   relative: 0

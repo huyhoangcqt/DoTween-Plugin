@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef2b21fbdd594114480df5c2bbe47106, type: 3}
-  m_Name: TweenObj_StateSequence 1
+  m_Name: TweenObj_StateSequence
   m_EditorClassIdentifier: 
   duration: 0.25
   delay: 0
@@ -41,28 +41,28 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   loops: 1
-  loopInterval: 0.25
+  loopInterval: 0
   loopType: 0
   ignoreTimeScale: 0
   steps:
-  - config: {fileID: 11400000, guid: afdad67628b08c64f8a3900f9c630bcf, type: 2}
+  - config: {fileID: 11400000, guid: d80208f784dfe7d42a815c663e6af993, type: 2}
     mode: 0
-    interval: 0.25
-  - config: {fileID: 11400000, guid: 44666bb12e6daf34eba597294092807f, type: 2}
+    interval: 0
+  - config: {fileID: 11400000, guid: c2234648349349042801eae6d14f6896, type: 2}
     mode: 0
-    interval: 0.25
-  - config: {fileID: 11400000, guid: 5b127518773fba54db29c7d441b0858e, type: 2}
+    interval: 0
+  - config: {fileID: 11400000, guid: 23ad73ba3a6acbe4b80a1b7716cf2e18, type: 2}
     mode: 0
-    interval: 0.25
-  - config: {fileID: 11400000, guid: b1dea988225116f45a9066bdb2f98563, type: 2}
+    interval: 0
+  - config: {fileID: 11400000, guid: e95fd60c4ebfed3418e0bd3cd90f72f5, type: 2}
     mode: 0
-    interval: 0.25
-  - config: {fileID: 11400000, guid: 1332a16f8ce07ab4eb5e294ee5ac35ad, type: 2}
+    interval: 0
+  - config: {fileID: 11400000, guid: bd42f6d97d25b2445807eded64888210, type: 2}
     mode: 1
     interval: 0
-  - config: {fileID: 11400000, guid: ed590588c467cb34a85f7c2219ba8998, type: 2}
+  - config: {fileID: 11400000, guid: b430e88b1fd52d240976a842db5ea94d, type: 2}
     mode: 0
-    interval: 0.25
-  - config: {fileID: 11400000, guid: 8496092115df3234bad55b37f78f2c20, type: 2}
+    interval: 0
+  - config: {fileID: 11400000, guid: cce7a1330a4cef54581b3866482f75f1, type: 2}
     mode: 0
-    interval: 0.25
+    interval: 0

@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5560caf5cd763b243b89af6aa9abcc7d, type: 3}
-  m_Name: TweenObj_State_4_Scale
+  m_Script: {fileID: 11500000, guid: 93365ac30c2944e43885129980f6b58a, type: 3}
+  m_Name: TweenObj_State_5_Rotate
   m_EditorClassIdentifier: 
-  duration: 0.5
+  duration: 0.25
   delay: 0
   ease: 9
   useCurve: 0
@@ -44,5 +44,5 @@ MonoBehaviour:
   loopInterval: 0
   loopType: 0
   ignoreTimeScale: 0
-  endScale: {x: 1, y: 1, z: 0}
+  endRotation: {x: 0, y: 0, z: 0}
   relative: 0

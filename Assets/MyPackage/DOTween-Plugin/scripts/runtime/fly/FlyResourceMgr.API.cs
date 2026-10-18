@@ -42,7 +42,7 @@ public partial class FlyResourceMgr
             return null;
         }
 
-        Transform canvasRoot = ResolveCanvasRoot(target.Icon);
+        Canvas referenceCanvas = ResolveRootCanvas(target.Icon);
         int finalValue = currentValue + rewardValue;
         var run = new Run { target = target, finalValue = finalValue };
 
@@ -52,7 +52,7 @@ public partial class FlyResourceMgr
             finalValue,
             source,
             target,
-            () => GetCoin(coinPrefab, canvasRoot),
+            () => GetCoin(coinPrefab, referenceCanvas),
             onValueChanged,
             () =>
             {
@@ -101,9 +101,9 @@ public partial class FlyResourceMgr
 
         activeRuns.Clear();
 
-        foreach (List<Transform> list in pools.Values)
+        foreach (CoinPool pool in pools.Values)
         {
-            foreach (Transform coin in list)
+            foreach (Transform coin in pool.coins)
             {
                 if (coin != null)
                     coin.gameObject.SetActive(false);
@@ -112,13 +112,13 @@ public partial class FlyResourceMgr
     }
 
     /// <summary>Creates coins of a prefab in advance to avoid spikes on the first reward.</summary>
-    public void Prewarm(GameObject coinPrefab, int count, Transform parent)
+    /// <param name="referenceCanvas">Canvas to match if FlyCanvas has to be created (optional).</param>
+    public void Prewarm(GameObject coinPrefab, int count, Canvas referenceCanvas = null)
     {
+        CoinPool pool = GetPool(coinPrefab, referenceCanvas);
+
         for (int i = 0; i < count; i++)
-        {
-            Transform coin = CreateCoin(coinPrefab, parent);
-            coin.gameObject.SetActive(false);
-        }
+            CreateCoin(coinPrefab, pool);
     }
 
     #endregion Fly Utils Methods!!!
@@ -135,67 +135,115 @@ public partial class FlyResourceMgr
     private readonly List<Run> activeRuns = new List<Run>();
 
     // One pool per coin prefab (key 0 = the built-in fallback coin).
-    private readonly Dictionary<int, List<Transform>> pools =
-        new Dictionary<int, List<Transform>>();
+    private class CoinPool
+    {
+        public Transform container;
+        public readonly List<Transform> coins = new List<Transform>();
+    }
 
-    private List<Transform> GetPool(GameObject coinPrefab)
+    private readonly Dictionary<int, CoinPool> pools =
+        new Dictionary<int, CoinPool>();
+
+    // Layout: FlyCanvas / poolParent / <prefab name> / <prefab name>(Clone) ...
+    // Coins never leave their container; they are only toggled with SetActive.
+    private CoinPool GetPool(GameObject coinPrefab, Canvas reference = null)
     {
         int key = coinPrefab != null ? coinPrefab.GetInstanceID() : 0;
 
-        if (!pools.TryGetValue(key, out List<Transform> list))
-        {
-            list = new List<Transform>();
-            pools[key] = list;
-        }
+        if (pools.TryGetValue(key, out CoinPool pool) && pool.container != null)
+            return pool;
 
-        return list;
+        EnsurePoolParent(reference);
+
+        pool = pool ?? new CoinPool();
+        var container = new GameObject(
+            coinPrefab != null ? coinPrefab.name : "Coin",
+            typeof(RectTransform));
+
+        container.transform.SetParent(poolParent, false);
+        pool.container = container.transform;
+        pools[key] = pool;
+        return pool;
     }
 
-    // Coins must live under a Canvas to be drawn; use the target's root canvas.
-    private static Transform ResolveCanvasRoot(Transform from)
+    // Uses the assigned poolParent if set. Otherwise creates a dedicated
+    // FlyCanvas, so moving coins only rebuild this small canvas and never
+    // the game's main UI canvases.
+    private void EnsurePoolParent(Canvas reference)
+    {
+        if (poolParent != null)
+            return;
+
+        var canvasGo = new GameObject("FlyCanvas", typeof(RectTransform));
+        canvasGo.transform.SetParent(transform, false);
+
+        var canvas = canvasGo.AddComponent<Canvas>();
+        canvas.overrideSorting = true;
+        canvas.sortingOrder = flyCanvasSortingOrder;
+
+        // Match the reference canvas so world positions line up.
+        if (reference != null &&
+            reference.renderMode != RenderMode.WorldSpace)
+        {
+            canvas.renderMode = reference.renderMode;
+            canvas.worldCamera = reference.worldCamera;
+            canvas.planeDistance = reference.planeDistance;
+            canvas.sortingLayerID = reference.sortingLayerID;
+        }
+        else
+        {
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        }
+
+        var poolGo = new GameObject("PoolParent", typeof(RectTransform));
+        poolGo.transform.SetParent(canvasGo.transform, false);
+        poolParent = poolGo.transform;
+    }
+
+    private static Canvas ResolveRootCanvas(Transform from)
     {
         Canvas canvas = from.GetComponentInParent<Canvas>();
-        return canvas != null ? canvas.rootCanvas.transform : from.root;
+        return canvas != null ? canvas.rootCanvas : null;
     }
 
-    // deactivateOnArrive hides finished coins, so any inactive entry is free.
-    private Transform GetCoin(GameObject coinPrefab, Transform canvasRoot)
+    // Finished coins are inactive, so any inactive entry is free.
+    private Transform GetCoin(GameObject coinPrefab, Canvas reference)
     {
-        List<Transform> pool = GetPool(coinPrefab);
-        pool.RemoveAll(c => c == null);
+        CoinPool pool = GetPool(coinPrefab, reference);
+        pool.coins.RemoveAll(c => c == null);
 
-        foreach (Transform coin in pool)
+        Transform coin = null;
+
+        foreach (Transform candidate in pool.coins)
         {
-            if (coin.gameObject.activeSelf)
-                continue;
-
-            if (coin.parent != canvasRoot)
-                coin.SetParent(canvasRoot, false);
-
-            coin.SetAsLastSibling();
-            coin.gameObject.SetActive(true);
-            return coin;
+            if (!candidate.gameObject.activeSelf)
+            {
+                coin = candidate;
+                break;
+            }
         }
 
-        Transform created = CreateCoin(coinPrefab, canvasRoot);
-        created.gameObject.SetActive(true);
-        return created;
+        if (coin == null)
+            coin = CreateCoin(coinPrefab, pool);
+
+        coin.gameObject.SetActive(true);
+        return coin;
     }
 
-    private Transform CreateCoin(GameObject coinPrefab, Transform parent)
+    private Transform CreateCoin(GameObject coinPrefab, CoinPool pool)
     {
         Transform coin;
 
         if (coinPrefab != null)
         {
-            coin = Instantiate(coinPrefab, parent, false).transform;
+            coin = Instantiate(coinPrefab, pool.container, false).transform;
         }
         else
         {
             var go = new GameObject(
-                "Coin", typeof(RectTransform), typeof(Image));
+                "Coin(Clone)", typeof(RectTransform), typeof(Image));
 
-            go.transform.SetParent(parent, false);
+            go.transform.SetParent(pool.container, false);
             ((RectTransform)go.transform).sizeDelta = new Vector2(40f, 40f);
 
             var image = go.GetComponent<Image>();
@@ -204,8 +252,8 @@ public partial class FlyResourceMgr
             coin = go.transform;
         }
 
-        coin.SetAsLastSibling();
-        GetPool(coinPrefab).Add(coin);
+        coin.gameObject.SetActive(false);
+        pool.coins.Add(coin);
         return coin;
     }
 

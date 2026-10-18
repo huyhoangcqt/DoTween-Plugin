@@ -11,7 +11,10 @@ public partial class FlyResourceMgr
     // Add resource management methods and properties here.
     [SerializeField] private FlyStyle defaultStyle = FlyStyle.FlyCurved;
     [SerializeField] private List<FlyResource> flyConfigs;
-    private Transform poolParent;
+    [SerializeField] private Transform poolParent;
+
+    [Tooltip("Sorting order of the auto-created FlyCanvas (used when poolParent is empty).")]
+    [SerializeField] private int flyCanvasSortingOrder = 100;
 
     #endregion
 

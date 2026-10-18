@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f25407185684bc409d7ec02b454b9c4, type: 3}
+  m_Name: FlyConfig_Straight
+  m_EditorClassIdentifier: 
+  duration: 0.5
+  delay: 0
+  ease: 5
+  ignoreTimeScale: 0
+  arcHeight: 0
+  spread: 0
+  maxCoin: 10
+  gapInterval: 0.05
+  burstRadius: 150
+  burstDuration: 0.3
+  holdDuration: 0.25
+  snapToOrigin: 1
+  matchDestinationRotation: 0
+  endScaleMultiplier: 1
+  deactivateOnArrive: 1

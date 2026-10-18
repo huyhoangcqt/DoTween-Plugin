@@ -31,7 +31,7 @@ public partial class Scene_Demo_Fly : MonoBehaviour
     {
         if (flyConfig == null)
         {
-            flyConfig = ScriptableObject.CreateInstance<FlyConfig>();
+            flyConfig = ScriptableObject.CreateInstance<FlyConfigCurved>();
             flyConfig.hideFlags = HideFlags.DontSave;
         }
 
@@ -76,7 +76,8 @@ public partial class Scene_Demo_Fly : MonoBehaviour
                 RectTransform coin = GetCoin();
                 coin.gameObject.SetActive(true);
                 return coin;
-            });
+            },
+            style: flyConfig.Style);
     }
 
     // deactivateOnArrive turns finished coins off, so any inactive entry is free.

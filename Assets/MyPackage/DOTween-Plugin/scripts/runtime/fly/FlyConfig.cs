@@ -4,14 +4,14 @@ using UnityEngine;
 namespace YellowCat.TweenPlugin.Fly
 {
     /// <summary>
-    /// Settings of a "fly from A to B" effect (coins, gems, stars...).
+    /// Base settings of a "fly from A to B" effect (coins, gems, stars...).
+    /// Each FlyStyle has its own subclass (see FlyConfigs.cs) with its own defaults.
     /// Scene objects (origin, destination) are passed at runtime via FlyContext.
     /// </summary>
-    [CreateAssetMenu(
-        menuName = "YellowCat/Tween/Fly/Fly Config",
-        fileName = "FlyConfig")]
-    public class FlyConfig : ScriptableObject
+    public abstract class FlyConfig : ScriptableObject
     {
+        public abstract FlyStyle Style { get; }
+
         [Header("Timing")]
         [Min(0.01f)] public float duration = 0.6f;
         [Min(0f)] public float delay;
@@ -32,6 +32,15 @@ namespace YellowCat.TweenPlugin.Fly
         [Tooltip("Spawn gap (seconds) between two consecutive coins.")]
         [UnityEngine.Serialization.FormerlySerializedAs("stagger")]
         [Min(0f)] public float gapInterval = 0.05f;
+
+        [Header("Style: Firework / Blooming")]
+        [Tooltip("How far items burst out before flying to the target (world units).")]
+        [Min(0f)] public float burstRadius = 150f;
+
+        [Min(0.01f)] public float burstDuration = 0.3f;
+
+        [Tooltip("Blooming only: pause after the burst, before flying.")]
+        [Min(0f)] public float holdDuration = 0.25f;
 
         [Header("Transform")]
         [Tooltip("Start exactly at the origin's position and rotation.")]

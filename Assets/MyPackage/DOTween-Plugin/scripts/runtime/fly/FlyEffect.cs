@@ -14,7 +14,8 @@ namespace YellowCat.TweenPlugin.Fly
         public static Tween Play(
             FlyConfig config,
             FlyContext ctx,
-            Action onArrive = null)
+            Action onArrive = null,
+            FlyStyle style = FlyStyle.FlyCurved)
         {
             if (config == null || ctx.Target == null || ctx.Destination == null)
             {
@@ -31,33 +32,75 @@ namespace YellowCat.TweenPlugin.Fly
                 target.SetPositionAndRotation(origin.position, origin.rotation);
             }
 
-            Vector3 startPos = target.position;
+            Vector3 originPos = target.position;
             Quaternion startRot = target.rotation;
             Vector3 startScale = target.localScale;
             Vector3 endScale = startScale * config.endScaleMultiplier;
 
-            // Fixed per item so the path is stable while the destination moves.
-            Vector3 offset = UnityEngine.Random.insideUnitSphere * config.spread;
-            offset.z = 0f;
+            bool burstFirst =
+                style == FlyStyle.FlyFirework || style == FlyStyle.FlyBlooming;
 
+            // Fixed per item so the path is stable while the destination moves.
+            Vector3 offset = Vector3.zero;
+            Vector3 burstPoint = originPos;
+
+            if (style == FlyStyle.FlyCurved)
+            {
+                offset = UnityEngine.Random.insideUnitSphere * config.spread;
+                offset.z = 0f;
+            }
+
+            if (burstFirst)
+            {
+                Vector2 dir = UnityEngine.Random.insideUnitCircle.normalized;
+
+                if (dir == Vector2.zero)
+                    dir = Vector2.up;
+
+                float radius = config.burstRadius
+                    * UnityEngine.Random.Range(0.6f, 1f);
+
+                burstPoint = originPos + (Vector3)(dir * radius);
+            }
+
+            Vector3 flyStart = burstPoint;
+            float arc = style == FlyStyle.FlyStraight || burstFirst
+                ? 0f
+                : config.arcHeight;
+
+            float burstT = 0f;
             float t = 0f;
 
-            Tween tween = DOTween.To(() => t, x => t = x, 1f, config.duration)
-                .SetEase(config.ease)
+            Sequence sequence = DOTween.Sequence()
                 .SetDelay(config.delay)
                 .SetUpdate(UpdateType.Normal, config.ignoreTimeScale)
-                .SetLink(target.gameObject, LinkBehaviour.KillOnDestroy)
+                .SetLink(target.gameObject, LinkBehaviour.KillOnDestroy);
+
+            if (burstFirst)
+            {
+                sequence.Append(DOTween.To(
+                        () => burstT, x => burstT = x, 1f, config.burstDuration)
+                    .SetEase(Ease.OutCubic)
+                    .OnUpdate(() => target.position =
+                        Vector3.LerpUnclamped(originPos, burstPoint, burstT)));
+
+                if (style == FlyStyle.FlyBlooming && config.holdDuration > 0f)
+                    sequence.AppendInterval(config.holdDuration);
+            }
+
+            sequence.Append(DOTween.To(() => t, x => t = x, 1f, config.duration)
+                .SetEase(config.ease)
                 .OnUpdate(() =>
                 {
                     if (destination == null)
                         return;
 
                     Vector3 end = destination.position;
-                    Vector3 control = (startPos + end) * 0.5f
-                        + Vector3.up * config.arcHeight + offset;
+                    Vector3 control = (flyStart + end) * 0.5f
+                        + Vector3.up * arc + offset;
 
                     float u = 1f - t;
-                    target.position = u * u * startPos
+                    target.position = u * u * flyStart
                         + 2f * u * t * control
                         + t * t * end;
 
@@ -67,26 +110,28 @@ namespace YellowCat.TweenPlugin.Fly
                     if (config.matchDestinationRotation)
                         target.rotation = Quaternion.SlerpUnclamped(
                             startRot, destination.rotation, t);
-                })
-                .OnComplete(() =>
-                {
-                    if (config.deactivateOnArrive)
-                        target.gameObject.SetActive(false);
+                }));
 
-                    onArrive?.Invoke();
-                });
+            sequence.OnComplete(() =>
+            {
+                if (config.deactivateOnArrive)
+                    target.gameObject.SetActive(false);
 
-            return tween;
+                onArrive?.Invoke();
+            });
+
+            return sequence;
         }
 
         /// <summary>
-        /// Plays several items one after another with the config's stagger.
+        /// Plays several items one after another with the config's gap interval.
         /// </summary>
         public static Sequence PlayBurst(
             FlyConfig config,
             IReadOnlyList<FlyContext> items,
             Action<int> onEachArrive = null,
-            Action onAllArrive = null)
+            Action onAllArrive = null,
+            FlyStyle style = FlyStyle.FlyCurved)
         {
             if (config == null || items == null || items.Count == 0)
                 return null;
@@ -99,7 +144,7 @@ namespace YellowCat.TweenPlugin.Fly
                 int index = i;
 
                 Tween tween = Play(
-                    config, items[i], () => onEachArrive?.Invoke(index));
+                    config, items[i], () => onEachArrive?.Invoke(index), style);
 
                 if (tween != null)
                     sequence.Insert(i * config.gapInterval, tween);
@@ -147,7 +192,8 @@ namespace YellowCat.TweenPlugin.Fly
             FlyTarget target,
             Func<Transform> getCoin,
             Action<int> onValueChanged = null,
-            Action onAllArrive = null)
+            Action onAllArrive = null,
+            FlyStyle style = FlyStyle.FlyCurved)
         {
             if (config == null || target == null || getCoin == null)
                 return null;
@@ -180,7 +226,8 @@ namespace YellowCat.TweenPlugin.Fly
                     target.Punch();
                     onValueChanged?.Invoke(shown);
                 },
-                onAllArrive);
+                onAllArrive,
+                style);
         }
     }
 }

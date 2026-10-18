@@ -16,10 +16,10 @@ MonoBehaviour:
   delay: 0
   ease: 5
   ignoreTimeScale: 0
-  arcHeight: 100
-  spread: 80
+  arcHeight: 500
+  spread: 0
   maxCoin: 10
-  gapInterval: 0.05
+  gapInterval: 0.1
   burstRadius: 150
   burstDuration: 0.3
   holdDuration: 0.25

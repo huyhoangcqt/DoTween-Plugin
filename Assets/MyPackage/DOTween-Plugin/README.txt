@@ -12,7 +12,5 @@ Functions:
 
 2. Hỗ trợ một số Preset tương tác với UI, tiện lợi để reuse qua nhiều project.
 
-
-[Optional]
 3. Hỗ trợ tính năng record.
 (Record điểm đầu, record điểm cuối)
